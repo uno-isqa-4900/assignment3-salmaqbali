@@ -1,87 +1,109 @@
 <template>
-  <div class="app">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-dark">
-        <router-link to="/">
-          <h1 class="navbar-brand"><span>Subscriptions</span> App</h1>
-        </router-link>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <router-link class="nav-link pr-3" to="/create"
-                >Add Subscription</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/"
-                >View Subscriptions</router-link
-              >
-            </li>
-          </ul>
+  <div>
+    <div class="List">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h3 class="text-center">Subscriptions</h3>
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th class="d-none d-sm-table-cell">Description</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="subscription in Subscriptions" :key="subscription.key">
+                <td>{{ subscription.name }}</td>
+                <td class="d-none d-sm-table-cell">
+                  {{ subscription.description }}
+                </td>
+                <td>
+                  ${{ subscription.amount }} /{{ subscription.frequency }}
+                </td>
+                <td>
+                  <router-link
+                    :to="{ name: 'edit', params: { id: subscription.key } }"
+                    class="btn btn-primary btn-sm px-3"
+                  >
+                    Edit
+                  </router-link>
+                  <button
+                    @click.prevent="deleteSubscription(subscription.key)"
+                    class="btn btn-danger btn-sm px-3"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </nav>
-    </header>
-    <main>
-      <router-view class="modify"></router-view>
-    </main>
+      </div>
+    </div>
   </div>
 </template>
 
-<style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap");
+<script>
+import db from "../firebaseDb";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Fira Sans", san-serif;
+export default {
+  data() {
+    return {
+      Subscriptions: [],
+    };
+  },
+  created() {
+    db.collection("subscriptions").onSnapshot((snapshotChange) => {
+      this.Subscriptions = [];
+      snapshotChange.forEach((doc) => {
+        this.Subscriptions.push({
+          key: doc.id,
+          name: doc.data().name,
+          description: doc.data().description,
+          amount: doc.data().amount,
+          frequency: doc.data().frequency,
+        });
+      });
+    });
+  },
+  methods: {
+    deleteSubscription(id) {
+      if (window.confirm("Do you really want to delete?")) {
+        db.collection("subscriptions")
+          .doc(id)
+          .delete()
+          .then(() => {
+            console.log("Document deleted!");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
+  },
+};
+</script>
 
-  &::selection {
-    background: transparentize(#42b883, 0.5);
-  }
+<style>
+.table thead {
+  background-color: #42b883;
+  color: #2c3d4e;
 }
 
-body {
-  background-color: #35495b;
+.table td,
+.table th {
+  padding: 12px 15px; 
+  border-bottom: 1px solid #ddd;
+  text-align: center;
 }
 
-a {
-  text-decoration: none;
-}
-
-header {
-  display: flex;
-  padding: 10px 16px;
-  background-color: #2c3d4e;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
-
-  h1 {
-    color: #fff;
-    font-size: 28px;
-
-    span {
-      color: #42b883;
-    }
-  }
-}
-
-h3 {
-  padding-top: 10px;
-}
-
-.modify {
-  padding: 10px;
+.btn {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin: 2px;
 }
 </style>
