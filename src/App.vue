@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap");
 
 * {
@@ -63,7 +63,6 @@ a {
 
 header {
   display: flex;
-  // justify-content: center;
   padding: 10px 16px;
   background-color: #2c3d4e;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
