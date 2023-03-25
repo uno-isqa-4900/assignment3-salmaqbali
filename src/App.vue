@@ -1,22 +1,6 @@
 <template>
   <div class="app">
     <header>
-      <!-- <nav class="navbar justify-content-between flex-nowrap flex-row">
-        <div class="container">
-          <ul class="nav navbar-nav flex-row float-right">
-            <li class="nav-item">
-              <router-link class="nav-link pr-3" to="/create"
-                >Add Subscription</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/"
-                >View Subscriptions</router-link
-              >
-            </li>
-          </ul>
-        </div>
-      </nav> -->
       <nav class="navbar navbar-expand-lg navbar-dark">
         <router-link to="/">
           <h1 class="navbar-brand"><span>Subscriptions</span> App</h1>
@@ -55,7 +39,7 @@
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap");
 
 * {
@@ -79,7 +63,7 @@ a {
 
 header {
   display: flex;
-  justify-content: center;
+  // justify-content: center;
   padding: 10px 16px;
   background-color: #2c3d4e;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
